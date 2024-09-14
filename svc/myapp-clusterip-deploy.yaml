@@ -1,0 +1,33 @@
+apiVersion: apps/v1 #接口组版本
+kind: Deployment
+metadata:
+  name: myapp-clusterip-deploy
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      release: stabel
+      svc: clusterip
+  template:
+    metadata:
+      labels:
+        app: myapp
+        release: stabel
+        env: test
+        svc: clusterip
+    spec:
+      containers:
+      - name: myapp-container
+        image: 121.40.27.163:30002/lyd-demo/mynginx:1.0
+        ports:
+        - name: http
+          containerPort: 80
+        readinessProbe:  #就绪探测
+          httpGet:
+            port: 80
+            path: /index.html
+          initialDelaySeconds: 1
+          periodSeconds: 3
+
