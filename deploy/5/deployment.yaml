@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: #标签
+    app: hotupdate-deploy
+  name: hotupdate-deploy
+spec:
+  replicas: 5
+  selector: #选择器
+    matchLabels : #匹配标签
+      app: hotupdate-deploy
+  template: #模板
+    metadata: #元数据
+      labels: #标签
+        app: hotupdate-deploy #pod标签
+    spec:
+      containers:
+      - image: 121.40.27.163:30002/lyd-demo/mynginx:1.0
+        name: nginx
+        volumeMounts: #卷绑定
+        - name: config-volume #卷名
+          mountPath: /etc/nginx/conf.d/
+      volumes: #卷
+        - name: config-volume #卷名
+          configMap:
+            name: default-nginx
+

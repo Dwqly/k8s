@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-emptydir-mem
+  namespace: default
+spec:
+  containers:
+  - name: myapp
+    image: 121.40.27.163:30002/lyd-demo/mynginx:1.0
+    ports:
+    - containerPort: 80
+    resources:
+      limits:   #最大值
+        cpu: "1"
+        memory: 1024Mi
+      requests: #初始值
+        cpu: "1"
+        memory: 1024Mi
+    volumeMounts:
+    - name: mem-volume
+      mountPath: /data
+  volumes:
+  - name: mem-volume
+    emptyDir:
+      medium: Memory
+      sizeLimit: 500Mi

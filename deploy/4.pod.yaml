@@ -1,0 +1,17 @@
+apiVersion: v1 #接口组
+kind: Pod
+metadata:
+  name: cm-volume-pod #pod名字
+spec:
+  containers:
+    - name: myapp-container 
+      image: 121.40.27.163:30002/lyd-demo/mynginx:1.0
+      volumeMounts: #卷绑定
+        - name: config-volume #卷名
+          mountPath: /etc/config #挂载的目录
+  volumes:
+    - name: config-volume #卷名
+      configMap: #基于这个卷名
+        name: literal-config
+  restartPolicy: Never
+
