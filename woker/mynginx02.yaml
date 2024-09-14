@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-k8s-node02
+  labels:
+    app: nginx-k8s-node02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-k8s-node02
+  template:
+    metadata:
+      labels:
+        app: nginx-k8s-node02
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - k8s-node01
+      containers:
+      - name: nginx
+        image: 121.40.27.163:30002/lyd-demo/mynginx:1.0
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: default02-nginx
+

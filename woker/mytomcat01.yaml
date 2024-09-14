@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment-01
+  labels:
+    name: tomcat01
+    app: mytomcat
+spec:
+  replicas: 2
+#  tolerations:
+#  - key: "node-role.kubernetes.io/control-plane"
+#    operator: "Exists"
+#    effect: "NoSchedule"
+  selector:
+    matchLabels:
+      name: tomcat01
+      app: mytomcat
+  template:
+    metadata:
+      labels:
+        name: tomcat01
+        app: mytomcat
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - k8s-node02
+      containers:
+      - name: tomcat-node-affinity-container
+        image: 121.40.27.163:30002/lyd-demo/tomcat:1.0
+        ports:
+        - containerPort: 8080
+
